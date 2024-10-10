@@ -49,6 +49,10 @@ public class RegistroActivity extends AppCompatActivity {
                         );
             }
         });
-        viewModel.cargar();
+        if(getIntent().getFlags()==Intent.FLAG_ACTIVITY_NEW_TASK){
+            viewModel.cargar();
+
+        }
+
     }
 }

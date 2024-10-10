@@ -2,6 +2,7 @@ package com.ledesma.tp2loginconobject.request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.ledesma.tp2loginconobject.model.Usuario;
@@ -19,10 +20,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class ApiClient {
+    private static File archivo;
+    private static File conectar(Context context) {
+        if(archivo==null){
+            archivo=new File(context.getFilesDir(), "usuario.dat");
 
-
+        }
+        return archivo;
+    }
     public static Usuario obtenerUsuario(Context context){
-        File archivo = new File(context.getFilesDir(), "usuario.dat");
+        File archivo = conectar(context);
         Usuario usu = new Usuario();
 
         try {
@@ -54,11 +61,9 @@ public class ApiClient {
 
     public static void guardarUsuario(Usuario usuario, Context context) {
        // Usuario usu = new Usuario(Long.parseLong(dni),nombre, apellido, email, password);
-        File archivo = new File(context.getFilesDir(), "usuario.dat");
+        File archivo = conectar(context);
         try {
-            if(archivo.length()!=0){
-                archivo.delete();
-            }
+
             FileOutputStream fos = new FileOutputStream(archivo, false);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -75,7 +80,7 @@ public class ApiClient {
     }
 
     public static Usuario login(Context context, String email, String pass){
-        File archivo = new File(context.getFilesDir(), "usuario.dat");
+        File archivo = conectar(context);
         Usuario usuario = null;
 
         try {
@@ -87,11 +92,12 @@ public class ApiClient {
                 try {
                     usuario = (Usuario) ois.readObject();
                     if (usuario.getEmail().equals(email) && usuario.getPassword().equals(pass)) {
-
+                        fi.close();
                         break;
                     } else {
                         Toast.makeText(context, "Usuario y/o Password Incorrectos", Toast.LENGTH_LONG).show();
                         usuario.setNombre("-1");
+                        fi.close();
                     }
                 } catch (EOFException e) {
                     fi.close();
