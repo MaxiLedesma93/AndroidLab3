@@ -49,9 +49,6 @@ public class RegistroActivity extends AppCompatActivity {
                         );
             }
         });
-        if(getIntent().getFlags() == Intent.FLAG_ACTIVITY_NEW_TASK)
-        {
-            viewModel.recuperarUsuario();
-        }
+        viewModel.cargar();
     }
 }

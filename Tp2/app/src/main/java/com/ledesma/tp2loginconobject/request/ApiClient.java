@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
 public class ApiClient {
 
 
-    public static Usuario obtenerUsuario(Context context, String mail, String password){
+    public static Usuario obtenerUsuario(Context context){
         File archivo = new File(context.getFilesDir(), "usuario.dat");
         Usuario usu = new Usuario();
 
@@ -44,12 +44,14 @@ public class ApiClient {
                 throw new RuntimeException(e);
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(context, "Error al acceder al archivo FileNotFound", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Error al acceder al archivo FileNotFound obtenerUsuario", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             Toast.makeText(context, "Error al acceder al archivo IOExcep", Toast.LENGTH_LONG).show();
         }
         return usu;
     }
+
+
     public static void guardarUsuario(Usuario usuario, Context context) {
        // Usuario usu = new Usuario(Long.parseLong(dni),nombre, apellido, email, password);
         File archivo = new File(context.getFilesDir(), "usuario.dat");
@@ -85,9 +87,11 @@ public class ApiClient {
                 try {
                     usuario = (Usuario) ois.readObject();
                     if (usuario.getEmail().equals(email) && usuario.getPassword().equals(pass)) {
-                        return usuario;
+
+                        break;
                     } else {
                         Toast.makeText(context, "Usuario y/o Password Incorrectos", Toast.LENGTH_LONG).show();
+                        usuario.setNombre("-1");
                     }
                 } catch (EOFException e) {
                     fi.close();
@@ -102,6 +106,7 @@ public class ApiClient {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+        return usuario;
     }
 
 
