@@ -87,23 +87,19 @@ public class ApiClient {
             FileInputStream fi = new FileInputStream(archivo);
             BufferedInputStream bis = new BufferedInputStream(fi);
             ObjectInputStream ois = new ObjectInputStream(bis);
-
-            while (true) {
-                try {
-                    usuario = (Usuario) ois.readObject();
-                    if (usuario.getEmail().equals(email) && usuario.getPassword().equals(pass)) {
-                        fi.close();
-                        break;
-                    } else {
-                        Toast.makeText(context, "Usuario y/o Password Incorrectos", Toast.LENGTH_LONG).show();
-                        usuario.setNombre("-1");
-                        fi.close();
-                    }
-                } catch (EOFException e) {
+            try {
+                usuario = (Usuario) ois.readObject();
+                if (usuario.getEmail().equals(email) && usuario.getPassword().equals(pass)) {
                     fi.close();
-                    break;
+                } else {
+                    Toast.makeText(context, "Usuario y/o Password Incorrectos", Toast.LENGTH_LONG).show();
+                    usuario.setNombre("-1");
+                    fi.close();
                 }
+            } catch (EOFException e) {
+                fi.close();
             }
+
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);

@@ -28,13 +28,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())
                 .create(MainActivityViewModel.class);
         setContentView(binding.getRoot());
-        viewModel.getMUsuario().observe(this, new Observer<Usuario>() {
-            @Override
-            public void onChanged(Usuario usuario) {
-                Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
-                startActivity(intent);
-            }
-        });
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
